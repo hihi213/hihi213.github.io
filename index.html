@@ -656,6 +656,7 @@
             jsonData.main.push(screenData);
         });
         //console.log(JSON.stringify(jsonData, null, 2));
+                const images = jsonData.imageInfo;
 // 전체 단계 수 계산
 function calculateTotalSteps() {
     let totalSteps = 0;
@@ -710,7 +711,7 @@ function updateProgress() {
         //저장데이터를 받아옴
         const highlightedWord = jsonData.highlightedWord;
         const storyStorage = jsonData.main;
-        const images = jsonData.imageInfo;
+
         //plushighlight[0][]
         //console.log(storyStorage[0][0][0]);
         //main1, main2,choice,oppen,close->main으로 통일
