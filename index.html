@@ -622,6 +622,7 @@
             "imageInfo": ["pic/house.jpeg"]
         };
         //따봉지피티야 고마워~
+        
         const sections = fullStory.split(/\[\d+\] /).filter(Boolean); // 빈 값 제거
 
         sections.forEach(section => {
@@ -657,6 +658,83 @@
         });
         //console.log(JSON.stringify(jsonData, null, 2));
                 const images = jsonData.imageInfo;
+               function preloadImages(imageList) {
+            const preloadedImages = [];
+        
+            imageList.forEach((imagePath) => {
+                const img = new Image();
+                img.src = imagePath;
+                preloadedImages.push(img);
+            });
+        
+            return preloadedImages;
+        }
+        const imageList = [
+        'pic/house.jpeg',
+        'pic/moon.webp'
+        ,'pic/moon4.jpg'
+        ,'pic/study4.webp'
+        ,'pic/theymet.webp'
+        , 'pic/situ.webp'
+        , 'pic/moon.webp'
+        , 'pic/moon4.jpg'
+        , 'pic/fish.webp'
+        , 'pic/lemon.webp'
+        , 'pic/fox3.webp'
+        , 'pic/potato.webp'
+        , 'pic/fish.webp'
+        , 'pic/fishfail1.webp'
+        , 'pic/fish.webp'
+        , 'pic/fishfail2.webp'
+        , 'pic/fish.webp'
+        , 'pic/rocketsuccess.webp'
+        , 'pic/fishmoon.png'
+        , 'pic/lemon.webp'
+        , 'pic/lemonsad.webp'
+        , 'pic/fishmoon.png'
+        , 'pic/lemon.webp'
+        , 'pic/lemoncrazy.webp'
+        , 'pic/lemonfly.webp'
+        , 'pic/lemonmoon.png'
+        , 'pic/fishlemon.webp'
+        , 'pic/fox3.webp'
+        , 'pic/foxerror.webp'
+        , 'pic/fox3.webp'
+        , 'pic/lemonmoon.png'
+        , 'pic/fox3.webp'
+        , 'pic/foxfly.webp'
+        , 'pic/foxmoon.webp'
+        , 'pic/fishmoon.png'
+        , 'pic/foxfish.jpeg'
+        , 'pic/foxyawn.webp'
+        , 'pic/lemonmovie.webp'
+        , 'pic/lemonpic.webp'
+        , 'pic/foxfish.jpeg'
+        , 'pic/foxlemon.jpeg'
+        , 'pic/nopotato.jpeg'
+        , 'pic/theymethat.png'
+        , 'pic/nopotato.jpeg '
+        , 'pic/moon.webp'
+        , 'pic/image3.jpeg'
+        , 'pic/potato.webp'
+        , 'pic/potatorocket.webp'
+        , 'pic/moon.webp'
+        , 'pic/end.png'
+        , 'pic/chatgpt.png'
+        ];
+         // 이미지 미리 로드 실행
+const preloadedImages = preloadImages(imageList);
+
+// 이미지 바꾸는 함수
+function changeImage(index) {
+    // 이미지를 변경할 img 태그 선택
+    const imageElement = document.getElementById('pic');
+
+    // 이미지가 배열 범위 내에 있는지 확인 후 변경
+    if (index >= 0 && index < preloadedImages.length) {
+        frame.src = preloadedImages[index].src;  // 미리 로드한 이미지를 설정
+    }
+}
         console.log(images);
 // 전체 단계 수 계산
 function calculateTotalSteps() {
@@ -785,7 +863,7 @@ function updateProgress() {
             choice[0].textContent = "다음 ";
             choice[1].textContent = "이전 ";
                         //사진을 교체합니다
-            frame.src = `${images[currentState.imageIndex]}`;
+            changeImage(currentState.imageIndex);
             //출력
             updateProgress();
             displaying();
