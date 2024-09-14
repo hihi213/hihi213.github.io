@@ -724,7 +724,7 @@
         //console.log(JSON.stringify(jsonData, null, 2));
                 //const images = jsonData.imageInfo;
 
-const preloadedImages = preloadImages(imageList);
+
 // 이미지 바꾸는 함수
 function changeImage(index) {
     // 이미지를 변경할 img 태그 선택
@@ -790,7 +790,7 @@ function updateProgress() {
         //저장데이터를 받아옴
         const highlightedWord = jsonData.highlightedWord;
         const storyStorage = jsonData.main;
-
+const preloadedImages = preloadImages(imageList);
         //plushighlight[0][]
         //console.log(storyStorage[0][0][0]);
         //main1, main2,choice,oppen,close->main으로 통일
