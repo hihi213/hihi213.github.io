@@ -772,6 +772,8 @@ function updateProgress() {
             }
         }
         function choiceclick(choicenum) {
+                        //사진을 교체합니다
+            frame.src = `${images[currentState.imageIndex]}`;
             //버튼에 따라 단위들을 수정한다.
             fixnum(choicenum);
             // 이전 텍스트를 모두 지웁니다.
@@ -781,8 +783,7 @@ function updateProgress() {
             currentState.charIndex = 0;
             choice[0].textContent = "다음 ";
             choice[1].textContent = "이전 ";
-            //사진을 교체합니다
-            frame.src = `${images[currentState.imageIndex]}`;
+
             //출력
             updateProgress();
             displaying();
