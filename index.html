@@ -34,29 +34,29 @@
       --radius-md: 12px;
       --radius-lg: 16px;
       --gap: clamp(6px, 1.8vw, 12px);
-      --card-padding: clamp(8px, 2.5vw, 22px);
-      --card-radius: clamp(10px, 2.5vw, 16px);
+      --card-padding: clamp(10px, 2.5vw, 20px);
+      --card-radius: clamp(12px, 2.5vw, 18px);
       --card-line-width: clamp(3px, 0.6vw, 5px);
-      --card-left-width: clamp(48px, 15vw, 88px);
+      --card-left-width: clamp(44px, 13vw, 64px);
       --card-left-padding: clamp(10px, 2.5vw, 20px);
-      --card-icon-size: clamp(28px, 6vw, 44px);
+      --card-icon-size: clamp(30px, 7vw, 40px);
       --card-icon-area-height: clamp(28px, 6vw, 36px);
       --card-title-gap: clamp(1.5px, 0.5vw, 4px);
       --card-center-padding-x: clamp(6px, 1.2vw, 10px);
       --card-center-padding-y: clamp(6px, 1.5vw, 10px);
-      --card-center-min-height: clamp(40px, 8vw, 56px);
-
+      --card-center-min-height: clamp(44px, 8vw, 64px);
+      --card-center-max-width: clamp(220px, 90vw, 380px);
       /* Typography */
       --font-main: 'Noto Sans KR', sans-serif;
-      --font-size-main: clamp(0.97rem, 3.2vw, 1.18rem);
-      --font-size-badge: clamp(0.82rem, 2vw, 1.05rem);
+      --font-size-main: clamp(1rem, 3.5vw, 1.15rem);
+      --font-size-badge: clamp(0.9rem, 2.5vw, 1.08rem);
 
       /* Button */
-      --btn-min-height: clamp(32px, 7vw, 48px);
+      --btn-min-height: clamp(38px, 8vw, 48px);
 
       /* Banner */
-      --banner-padding: clamp(8px, 2.5vw, 16px);
-      --banner-radius: clamp(10px, 2.5vw, 16px);
+      --banner-padding: clamp(12px, 3vw, 22px);
+      --banner-radius: clamp(12px, 2.5vw, 18px);
 
       /* Badge */
       --badge-yellow-bg: #fff4d6;
@@ -163,7 +163,7 @@
       display: flex;
       flex-direction: column;
       gap: var(--gap);
-      margin: 0 var(--gap);
+      margin: 0 clamp(4px, 2vw, 24px);
       padding: var(--gap) 0;
     }
     .main-card {
@@ -176,6 +176,7 @@
       padding: var(--card-padding) 0;
       transition: all var(--transition-fast);
       background: var(--color-bg-card);
+      min-height: clamp(90px, 14vw, 150px);
     }
     .main-card:hover {
       transform: translateY(-2px);
@@ -373,6 +374,31 @@
     .icon-dryer { color: var(--icon-dryer); }
     .icon-library { color: var(--icon-library); }
     .icon-studyroom { color: var(--icon-studyroom); }
+
+    @media (min-width: 430px) and (min-height: 800px) {
+      :root {
+        --font-size-main: clamp(1.08rem, 3.8vw, 1.22rem);
+        --font-size-badge: clamp(1rem, 2.8vw, 1.13rem);
+        --card-padding: clamp(16px, 3vw, 32px);
+        --card-left-width: clamp(56px, 15vw, 88px);
+        --card-icon-size: clamp(36px, 8vw, 48px);
+        --btn-min-height: clamp(44px, 10vw, 56px);
+        --banner-padding: clamp(18px, 4vw, 36px);
+        --banner-radius: clamp(16px, 3vw, 28px);
+        --card-center-min-height: clamp(64px, 12vw, 100px);
+      }
+      .main-card {
+        min-height: clamp(140px, 22vw, 220px);
+      }
+      .banner {
+        height: 12dvh;
+        min-height: 80px;
+        max-height: 140px;
+      }
+      .banner-title {
+        font-size: clamp(1.18rem, 4vw, 1.6rem);
+      }
+    }
   </style>
 </head>
 <body>
@@ -550,7 +576,7 @@
           const type = selected.getAttribute('data-type');
           const icon = selected.getAttribute('data-icon');
           document.getElementById('laundryCardTitle').innerText = type;
-          let iconColor = icon === 'local_laundry_service' ? '#1e7d4f' : '#e67e22;';
+          let iconColor = icon === 'local_laundry_service' ? '#1e7d4f' : '#e67e22';
           document.getElementById('laundryCardIcon').innerHTML = `<span class="material-symbols-outlined" style="color:${iconColor}">${icon}</span>`;
         }
       }
