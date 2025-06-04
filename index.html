@@ -91,6 +91,7 @@
       --card-center-padding-x: clamp(8px, 2vw, 14px);
       --card-center-padding-y: clamp(6px, 1.5vw, 10px);
       --card-center-min-height: clamp(40px, 8vw, 56px);
+      --card-left-padding: clamp(10px, 2.5vw, 20px);
 
     html, body {
       height: 100dvh;
@@ -170,7 +171,7 @@
     }
     .main-card {
       display: flex;
-      align-items: center;
+      align-items: stretch;
       border-radius: var(--card-radius);
       box-shadow: var(--shadow-md);
       position: relative;
@@ -196,14 +197,16 @@
     .main-card.library::before { background: var(--library-gradient); }
     .main-card.studyroom::before { background: var(--studyroom-gradient); }
     .card-left {
-      flex: 0 0 var(--icon-size);
+      flex: 0 0 var(--card-left-width);
+      min-width: var(--card-left-width);
+      max-width: 80px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 0 calc(var(--icon-size) * 0.25);
+      padding: 0 calc(var(--gap) * 0.7);
+      padding-left: var(--card-left-padding);
       z-index: 1;
-      min-width: 0;
     }
     .card-icon {
       aspect-ratio: 1;
@@ -226,12 +229,12 @@
       letter-spacing: -0.3px;
     }
     .card-center {
-      flex: 1 1 0;
+      flex: 1 1 auto;
+      min-width: 0;
       display: flex;
       flex-direction: column;
       justify-content: center;
       padding: var(--card-center-padding-y) var(--card-center-padding-x);
-      min-width: 0;
       min-height: var(--card-center-min-height);
       z-index: 1;
     }
@@ -281,8 +284,9 @@
       color: var(--badge-gray-text);
     }
     .card-btns {
-      flex: 0 0 clamp(56px, 18vw, 96px);
+      flex: 0 0 80px;
       min-width: 80px;
+      max-width: 100px;
       flex-shrink: 0;
       display: flex;
       flex-direction: column;
@@ -291,7 +295,6 @@
       gap: var(--gap);
       padding: var(--gap) var(--gap) var(--gap) calc(var(--gap) * 0.5);
       z-index: 1;
-      min-width: 0;
     }
     .card-btn {
       font-size: var(--font-size-main);
