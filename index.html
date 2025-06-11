@@ -29,35 +29,17 @@
       --color-shadow-md: 0 4px 12px rgba(0,0,0,0.08);
       --color-shadow-lg: 0 6px 16px rgba(0,0,0,0.12);
 
-      /* Spacing & Layout */
-      --radius-sm: 8px;
-      --radius-md: 12px;
-      --radius-lg: 16px;
-      --gap: 8px;
-      --card-padding: 16px;
-      --card-radius: 14px;
-      --card-line-width: 4px;
-      --card-left-width: 56px;
-      --card-left-padding: 16px;
-      --card-icon-size: 36px;
-      --card-icon-area-height: 32px;
-      --card-title-gap: 2px;
-      --card-center-padding-x: 8px;
-      --card-center-padding-y: 8px;
-      --card-center-min-height: 52px;
-      --card-center-max-width: 280px;
-      /* Typography */
-      --font-main: 'Noto Sans KR', sans-serif;
-      --font-size-main: 1.08rem;
-      --font-size-badge: 1rem;
-
-      /* Button */
-      --btn-min-height: 42px;
-
-      /* Banner */
-      --banner-padding: 16px;
-      --banner-radius: 14px;
-
+      /* Responsive Sizing using clamp(min, preferred, max) and vmin/vw units */
+      /* Increased values for larger elements */
+      --font-size-sm: clamp(0.75rem, 2.8vmin, 0.9rem);
+      --font-size-md: clamp(0.85rem, 3.2vmin, 1.05rem);
+      --font-size-lg: clamp(0.95rem, 3.6vmin, 1.15rem);
+      --spacing-xs: clamp(0.25rem, 1.8vmin, 0.5rem);
+      --spacing-sm: clamp(0.5rem, 3vmin, 0.8rem);
+      --spacing-md: clamp(0.7rem, 4vmin, 1rem);
+      --card-radius: clamp(0.8rem, 3.5vmin, 1.2rem);
+      --card-line-width: clamp(0.25rem, 1vmin, 0.35rem);
+      
       /* Badge */
       --badge-yellow-bg: #fff4d6;
       --badge-yellow-text: var(--color-primary-yellow);
@@ -94,41 +76,45 @@
       height: 100dvh;
       margin: 0;
       padding: 0;
+      -webkit-tap-highlight-color: transparent;
     }
     body {
-      min-height: 100dvh;
       background: var(--color-bg-light);
-      max-width: 430px; /* 모바일 화면 최대 너비 */
-      margin: 0 auto; /* 중앙 정렬 */
-      overflow-x: hidden; /* 가로 스크롤 방지 */
+      width: min(428px, 100vw);
+      margin: 0 auto;
       color: var(--color-text-main);
       font-family: var(--font-main);
-      font-size: var(--font-size-main);
+      font-size: 16px;
+      display: flex;
+      flex-direction: column;
+      height: 100dvh;
+      overflow: hidden;
     }
 
     /* =====================
        Banner
        ===================== */
     .banner {
-      height: 12dvh;
-      min-height: 52px;
-      max-height: 80px;
-      margin: 0 var(--banner-padding);
-      padding: 0 var(--banner-padding);
+      height: 3.25rem;
+      margin: var(--spacing-sm) var(--spacing-sm) 0 var(--spacing-sm);
+      padding: 0 var(--spacing-md);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border-radius: var(--banner-radius);
+      border-radius: var(--card-radius);
       background: linear-gradient(135deg, #e3f2ff 0%, #bbdefb 100%);
       box-shadow: var(--color-shadow-sm);
+      flex-shrink: 0;
+      position: relative;
+      z-index: 1;
     }
     .banner-left {
       display: flex;
       align-items: center;
-      gap: 16px;
+      gap: 1rem;
     }
     .banner-title {
-      font-size: var(--font-size-main);
+      font-size: 0.95rem;
       font-weight: 700;
       color: var(--color-primary-blue);
       letter-spacing: -0.5px;
@@ -136,23 +122,23 @@
     .menu-btn {
       background: #fff;
       border: none;
-      width: 44px;
-      height: 44px;
-      border-radius: var(--radius-md);
+      width: 2.25rem;
+      height: 2.25rem;
+      border-radius: var(--spacing-sm);
       box-shadow: var(--color-shadow-sm);
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
       transition: all var(--transition-fast);
-      margin-left: 16px;
+      margin-left: var(--spacing-md);
     }
     .menu-btn:active {
       transform: scale(0.96);
     }
     .menu-btn svg {
-      width: 28px;
-      height: 28px;
+      width: 1.375rem;
+      height: 1.375rem;
       display: block;
     }
 
@@ -160,11 +146,14 @@
        Card List & Card
        ===================== */
     .card-list {
-      display: flex;
-      flex-direction: column;
-      gap: var(--gap);
-      margin: 0 clamp(4px, 2vw, 24px);
-      padding: var(--gap) 0;
+      display: grid;
+      grid-template-rows: repeat(4, 1fr);
+      gap: var(--spacing-sm);
+      margin: var(--spacing-sm);
+      padding: 0;
+      flex: 1;
+      min-height: 0;
+      position: relative;
     }
     .main-card {
       display: flex;
@@ -173,10 +162,9 @@
       box-shadow: var(--color-shadow-md);
       position: relative;
       overflow: hidden;
-      padding: var(--card-padding) 0;
+      padding: var(--spacing-sm) 0;
       transition: all var(--transition-fast);
       background: var(--color-bg-card);
-      min-height: clamp(90px, 14vw, 150px);
     }
     .main-card:hover {
       transform: translateY(-2px);
@@ -188,7 +176,6 @@
       position: absolute;
       left: 0; top: 0; bottom: 0;
       width: var(--card-line-width);
-      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
     }
     .main-card.refrigerator::before { background: var(--gradient-refrigerator); }
     .main-card.laundry::before { background: var(--gradient-laundry); }
@@ -196,36 +183,37 @@
     .main-card.studyroom::before { background: var(--gradient-studyroom); }
 
     .card-left {
-      flex: 0 0 var(--card-left-width);
-      min-width: var(--card-left-width);
-      max-width: 80px;
+      flex: 0 0 clamp(3.5rem, 22vw, 4.5rem);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 0 calc(var(--gap) * 0.7);
-      padding-left: var(--card-left-padding);
+      padding: 0 var(--spacing-sm);
       z-index: 1;
+      gap: var(--spacing-xs);
     }
     .card-icon {
       aspect-ratio: 1;
-      width: var(--card-icon-size);
-      height: var(--card-icon-size);
+      width: clamp(2.5rem, 12vw, 3.25rem);
+      height: clamp(2.5rem, 12vw, 3.25rem);
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-bottom: var(--card-title-gap);
       background: var(--color-bg-hover);
       border-radius: 50%;
     }
+     .card-icon .material-symbols-outlined {
+        font-size: clamp(1.6rem, 8vw, 2.1rem);
+    }
     .card-title {
-      font-size: var(--font-size-main);
+      font-size: var(--font-size-md);
       font-weight: 600;
       color: var(--color-text-main);
-      margin-bottom: 0;
       word-break: keep-all;
       white-space: normal;
+      text-align: center;
       letter-spacing: -0.3px;
+      line-height: 1.2;
     }
     .card-center {
       flex: 1 1 auto;
@@ -233,23 +221,22 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
-      padding: var(--card-center-padding-y) var(--card-center-padding-x);
-      min-height: var(--card-center-min-height);
+      padding: var(--spacing-sm);
       z-index: 1;
+      gap: var(--spacing-sm);
     }
     .card-info {
-      font-size: var(--font-size-main);
+      font-size: var(--font-size-lg);
       font-weight: 500;
       color: var(--color-text-main);
-      margin-bottom: calc(var(--gap) * 0.7);
       word-break: keep-all;
       white-space: normal;
+      line-height: 1.2;
     }
     .card-badges {
       display: flex;
       flex-wrap: wrap;
-      gap: calc(var(--gap) * 0.5);
-      margin-bottom: calc(var(--gap) * 0.3);
+      gap: var(--spacing-xs);
     }
 
     /* =====================
@@ -257,66 +244,53 @@
        ===================== */
     .badge {
       display: inline-block;
-      font-size: var(--font-size-badge);
+      font-size: var(--font-size-sm);
       font-weight: 600;
-      padding: 0.32em 1.1em;
-      border-radius: var(--radius-sm);
+      padding: 0.5em 0.9em;
+      border-radius: var(--spacing-xs);
       background: var(--color-bg-hover);
       color: var(--color-primary-blue);
       box-shadow: var(--color-shadow-sm);
       letter-spacing: -0.5px;
+      line-height: 1.2;
     }
-    .badge.yellow {
-      background: var(--badge-yellow-bg);
-      color: var(--badge-yellow-text);
-    }
-    .badge.blue {
-      background: var(--badge-blue-bg);
-      color: var(--badge-blue-text);
-    }
-    .badge.red {
-      background: var(--badge-red-bg);
-      color: var(--badge-red-text);
-    }
-    .badge.green {
-      background: var(--badge-green-bg);
-      color: var(--badge-green-text);
-    }
-    .badge.gray {
-      background: var(--badge-gray-bg);
-      color: var(--badge-gray-text);
-    }
+    .badge.yellow { background: var(--badge-yellow-bg); color: var(--badge-yellow-text); }
+    .badge.blue { background: var(--badge-blue-bg); color: var(--badge-blue-text); }
+    .badge.red { background: var(--badge-red-bg); color: var(--badge-red-text); }
+    .badge.green { background: var(--badge-green-bg); color: var(--badge-green-text); }
+    .badge.gray { background: var(--badge-gray-bg); color: var(--badge-gray-text); }
 
     /* =====================
        Button
        ===================== */
     .card-btns {
-      flex: 0 0 80px;
-      min-width: 80px;
-      max-width: 100px;
-      flex-shrink: 0;
+      flex: 0 0 clamp(4rem, 24vw, 5.5rem);
       display: flex;
       flex-direction: column;
       align-items: stretch;
       justify-content: center;
-      gap: var(--gap);
-      padding: var(--gap) var(--gap) var(--gap) calc(var(--gap) * 0.5);
+      gap: var(--spacing-sm);
+      padding: var(--spacing-sm);
       z-index: 1;
     }
     .card-btn {
-      font-size: var(--font-size-main);
+      font-size: var(--font-size-md);
       font-weight: 600;
       border: none;
-      border-radius: var(--radius-md);
-      padding: 0.8em 0;
+      border-radius: var(--spacing-sm);
+      padding: 0.7em 0.2em;
       background: var(--color-bg-hover);
       color: var(--color-primary-blue);
       box-shadow: var(--color-shadow-sm);
-      margin-bottom: 0;
       cursor: pointer;
       transition: all var(--transition-fast);
       letter-spacing: -0.3px;
-      min-height: var(--btn-min-height);
+      height: auto;
+      line-height: 1;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     .card-btn.primary {
       background: linear-gradient(135deg, #2196f3 0%, var(--color-primary-blue) 100%);
@@ -334,13 +308,16 @@
     .vertical-carousel {
       position: relative;
       width: 100%;
-      min-height: clamp(60px, 12vw, 120px);
+      height: 100%;
       overflow: hidden;
     }
     .vertical-carousel .carousel-item {
       display: none;
       flex-direction: column;
+      justify-content: center;
       width: 100%;
+      height: 100%;
+      gap: var(--spacing-sm);
       transition: opacity var(--transition-fast);
     }
     .vertical-carousel .carousel-item.active {
@@ -349,12 +326,12 @@
     .carousel-dots {
       display: flex;
       justify-content: center;
-      gap: calc(var(--gap) * 0.5);
-      margin-top: calc(var(--gap) * 0.7);
+      gap: var(--spacing-xs);
+      margin-top: var(--spacing-sm);
     }
     .carousel-dots .dot {
-      width: clamp(8px, 1.5vw, 14px);
-      height: clamp(8px, 1.5vw, 14px);
+      width: clamp(7px, 1.8vmin, 11px);
+      height: clamp(7px, 1.8vmin, 11px);
       border-radius: 50%;
       background: #e0e0e0;
       display: inline-block;
@@ -374,31 +351,6 @@
     .icon-dryer { color: var(--icon-dryer); }
     .icon-library { color: var(--icon-library); }
     .icon-studyroom { color: var(--icon-studyroom); }
-
-    @media (min-width: 430px) {
-      :root {
-        --font-size-main: 1.08rem;
-        --font-size-badge: 1rem;
-        --card-padding: 16px;
-        --card-left-width: 56px;
-        --card-icon-size: 36px;
-        --btn-min-height: 42px;
-        --banner-padding: 16px;
-        --banner-radius: 14px;
-        --card-center-min-height: 52px;
-      }
-      .main-card {
-        min-height: 140px;
-      }
-      .banner {
-        height: 12dvh;
-        min-height: 64px;
-        max-height: 80px;
-      }
-      .banner-title {
-        font-size: 1.18rem;
-      }
-    }
   </style>
 </head>
 <body>
@@ -417,7 +369,7 @@
       <!-- 냉장고 카드 -->
       <div class="main-card refrigerator">
         <div class="card-left">
-          <div class="card-icon"><span class="material-symbols-outlined" style="color:#007aff;">kitchen</span></div>
+          <div class="card-icon"><span class="material-symbols-outlined icon-refrigerator">kitchen</span></div>
           <div class="card-title">냉장고</div>
         </div>
         <div class="card-center">
@@ -435,18 +387,18 @@
       <!-- 세탁기 카드 (세로 캐러셀) -->
       <div class="main-card laundry">
         <div class="card-left">
-          <div class="card-icon" id="laundryCardIcon"><span class="material-symbols-outlined" style="color:#1e7d4f;">local_laundry_service</span></div>
-          <div class="card-title" id="laundryCardTitle">건조기</div>
+          <div class="card-icon" id="laundryCardIcon"><span class="material-symbols-outlined icon-laundry">local_laundry_service</span></div>
+          <div class="card-title" id="laundryCardTitle">세탁기</div>
           <div class="carousel-dots"></div>
         </div>
         <div class="card-center vertical-carousel" id="laundryCarousel">
-          <div class="carousel-item active" data-type="세탁기" data-icon="local_laundry_service">
+          <div class="carousel-item active" data-type="세탁기" data-icon="local_laundry_service" data-icon-class="icon-laundry">
             <div class="card-info">2번 사용중, 15분 남음</div>
             <div class="card-badges">
               <span class="badge gray">기다리고 있어요</span>
             </div>
           </div>
-          <div class="carousel-item" data-type="건조기" data-icon="laundry">
+          <div class="carousel-item" data-type="건조기" data-icon="laundry" data-icon-class="icon-dryer">
             <div class="card-info">3번 대기중</div>
             <div class="card-badges">
               <span class="badge yellow">곧 사용 가능</span>
@@ -461,7 +413,7 @@
       <!-- 도서 카드 -->
       <div class="main-card library">
         <div class="card-left">
-          <div class="card-icon"><span class="material-symbols-outlined" style="color:#c09000;">menu_book</span></div>
+          <div class="card-icon"><span class="material-symbols-outlined icon-library">menu_book</span></div>
           <div class="card-title">도서</div>
         </div>
         <div class="card-center">
@@ -480,7 +432,7 @@
       <!-- 스터디룸 카드 (세로 캐러셀) -->
       <div class="main-card studyroom">
         <div class="card-left">
-          <div class="card-icon"><span class="material-symbols-outlined" style="color:#8e44ad;">meeting_room</span></div>
+          <div class="card-icon"><span class="material-symbols-outlined icon-studyroom">meeting_room</span></div>
           <div class="card-title">다목적실</div>
           <div class="carousel-dots"></div>
         </div>
@@ -521,19 +473,19 @@
       'refrigerator-violation': '기준위반: 보관 기준을 위반한 물품이 있습니다.',
       'library-imminent': '반납임박: 곧 반납해야 하는 도서가 있습니다.',
       'library-overdue': '연체: 반납 기한이 지난 도서가 있습니다.',
-      'library-reserve': '예약대출: 예약대출이 가능한 도서입니다.'
+      'library-reserve': '예약대출이 가능한 도서입니다.'
     };
     document.querySelectorAll('.badge-detail').forEach(function(badge) {
-      badge.addEventListener('click', function() {
+      badge.addEventListener('click', function(e) {
+        e.stopPropagation();
         const type = badge.getAttribute('data-type');
         document.getElementById('modalContent').innerText = badgeDetails[type] || type;
         document.getElementById('detailModal').style.display = 'flex';
       });
     });
-    // 세탁기/스터디룸 카드센터 클릭 시 상세 모달
-    document.querySelectorAll('#laundryCarousel .carousel-item, #studyroomCarousel .carousel-item').forEach(function(item) {
+    // 캐러셀 아이템 클릭 시 상세 모달
+    document.querySelectorAll('.vertical-carousel .carousel-item').forEach(function(item) {
       item.addEventListener('click', function() {
-        // 카드센터의 텍스트(예약/상태 정보)만 추출
         let info = item.querySelector('.card-info')?.innerText || '';
         let badges = Array.from(item.querySelectorAll('.card-badges .badge')).map(b=>b.innerText).join(' / ');
         let content = info;
@@ -545,45 +497,56 @@
     function closeModal() {
       document.getElementById('detailModal').style.display = 'none';
     }
-    // 세로 캐러셀(터치/휠) → 가로 캐러셀(좌우 스와이프/휠)
+    // 캐러셀 로직
     function setupVerticalCarousel(carouselId) {
       const carousel = document.getElementById(carouselId);
       if (!carousel) return;
       let startX = null;
       let current = 0;
       const items = carousel.querySelectorAll('.carousel-item');
-      const dots = carousel.parentElement.querySelector('.carousel-dots');
-      
+      const dotsContainer = carousel.closest('.main-card').querySelector('.carousel-dots');
+      const dots = [];
+
       // dot 생성
-      if (dots) {
-        dots.innerHTML = '';
-        items.forEach((_, i) => {
-          const dot = document.createElement('span');
-          dot.className = 'dot' + (i === 0 ? ' active' : '');
-          dot.onclick = () => { current = i; show(current); };
-          dots.appendChild(dot);
-        });
+      if (dotsContainer) {
+          dotsContainer.innerHTML = '';
+          items.forEach((_, i) => {
+              const dot = document.createElement('span');
+              dot.className = 'dot' + (i === 0 ? ' active' : '');
+              dot.onclick = (e) => { 
+                e.stopPropagation(); // Prevent card click event
+                current = i; 
+                show(current); 
+              };
+              dotsContainer.appendChild(dot);
+              dots.push(dot);
+          });
       }
       
       function show(idx) {
         items.forEach((el, i) => el.classList.toggle('active', i === idx));
-        if (dots) {
-          Array.from(dots.children).forEach((dot, i) => dot.classList.toggle('active', i === idx));
+        if (dotsContainer) {
+          dots.forEach((dot, i) => dot.classList.toggle('active', i === idx));
         }
-        // Update card icon and title for laundryCarousel only
+
+        // 세탁기 캐러셀 아이콘, 타이틀 업데이트
         if (carouselId === 'laundryCarousel') {
           const selected = items[idx];
           const type = selected.getAttribute('data-type');
           const icon = selected.getAttribute('data-icon');
-          document.getElementById('laundryCardTitle').innerText = type;
-          let iconColor = icon === 'local_laundry_service' ? '#1e7d4f' : '#e67e22';
-          document.getElementById('laundryCardIcon').innerHTML = `<span class="material-symbols-outlined" style="color:${iconColor}">${icon}</span>`;
+          const iconClass = selected.getAttribute('data-icon-class');
+          const titleEl = document.getElementById('laundryCardTitle');
+          const iconContainerEl = document.getElementById('laundryCardIcon');
+          if(titleEl) titleEl.innerText = type;
+          if(iconContainerEl){
+            iconContainerEl.innerHTML = `<span class="material-symbols-outlined ${iconClass}">${icon}</span>`;
+          }
         }
       }
       
       carousel.addEventListener('touchstart', function(e) {
         if (e.touches.length === 1) startX = e.touches[0].clientX;
-      });
+      }, { passive: true });
       
       carousel.addEventListener('touchend', function(e) {
         if (startX === null) return;
@@ -598,11 +561,17 @@
       });
       
       carousel.addEventListener('wheel', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
         if ((e.deltaX > 0 || e.deltaY > 0) && current < items.length - 1) current++;
         else if ((e.deltaX < 0 || e.deltaY < 0) && current > 0) current--;
         show(current);
       });
+      
+      // 초기 상태 설정
+      show(current);
     }
+
     document.addEventListener('DOMContentLoaded', function() {
       setupVerticalCarousel('laundryCarousel');
       setupVerticalCarousel('studyroomCarousel');
