@@ -30,7 +30,6 @@
       --color-shadow-lg: 0 6px 16px rgba(0,0,0,0.12);
 
       /* Responsive Sizing using clamp(min, preferred, max) and vmin/vw units */
-      /* Increased values for larger elements */
       --font-size-sm: clamp(0.75rem, 2.8vmin, 0.9rem);
       --font-size-md: clamp(0.85rem, 3.2vmin, 1.05rem);
       --font-size-lg: clamp(0.95rem, 3.6vmin, 1.15rem);
@@ -89,6 +88,20 @@
       flex-direction: column;
       height: 100dvh;
       overflow: hidden;
+    }
+
+    /* =====================
+       Accessibility Utility
+       ===================== */
+    .visually-hidden {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        margin: -1px;
+        padding: 0;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        border: 0;
     }
 
     /* =====================
@@ -253,6 +266,15 @@
       box-shadow: var(--color-shadow-sm);
       letter-spacing: -0.5px;
       line-height: 1.2;
+      /* Resetting button styles for badges that are buttons */
+      border: none;
+      font-family: inherit;
+      text-align: left;
+      cursor: pointer;
+    }
+    /* Non-clickable badge styles */
+    .badge:not(.badge-detail) {
+        cursor: default;
     }
     .badge.yellow { background: var(--badge-yellow-bg); color: var(--badge-yellow-text); }
     .badge.blue { background: var(--badge-blue-bg); color: var(--badge-blue-text); }
@@ -319,6 +341,7 @@
       height: 100%;
       gap: var(--spacing-sm);
       transition: opacity var(--transition-fast);
+      cursor: pointer;
     }
     .vertical-carousel .carousel-item.active {
       display: flex;
@@ -375,8 +398,9 @@
         <div class="card-center">
           <div class="card-info">내 물품 5개</div>
           <div class="card-badges">
-            <span class="badge yellow badge-detail" data-type="refrigerator-imminent">임박 2개</span>
-            <span class="badge red badge-detail" data-type="refrigerator-violation">기준위반 1개</span>
+            <!-- 시맨틱 개선: span -> button -->
+            <button class="badge yellow badge-detail" data-type="refrigerator-imminent">임박 2개</button>
+            <button class="badge red badge-detail" data-type="refrigerator-violation">기준위반 1개</button>
           </div>
         </div>
         <div class="card-btns">
@@ -392,6 +416,7 @@
           <div class="carousel-dots"></div>
         </div>
         <div class="card-center vertical-carousel" id="laundryCarousel">
+          <!-- 코드 관리 개선: data-icon-class 속성 추가 -->
           <div class="carousel-item active" data-type="세탁기" data-icon="local_laundry_service" data-icon-class="icon-laundry">
             <div class="card-info">2번 사용중, 15분 남음</div>
             <div class="card-badges">
@@ -419,9 +444,9 @@
         <div class="card-center">
           <div class="card-info">대출중 2권</div>
           <div class="card-badges">
-            <span class="badge yellow badge-detail" data-type="library-imminent">반납임박 1권</span>
-            <span class="badge red badge-detail" data-type="library-overdue">연체 1권</span>
-            <span class="badge green badge-detail" data-type="library-reserve">대출가능 1권</span>
+            <button class="badge yellow badge-detail" data-type="library-imminent">반납임박 1권</button>
+            <button class="badge red badge-detail" data-type="library-overdue">연체 1권</button>
+            <button class="badge green badge-detail" data-type="library-reserve">대출가능 1권</button>
           </div>
         </div>
         <div class="card-btns">
@@ -459,122 +484,204 @@
       </div>
     </div>
   
-  <!-- 상세 모달 -->
-  <div id="detailModal" style="display:none;position:fixed;left:0;top:0;width:100vw;height:100vh;z-index:999;background:rgba(0,0,0,0.18);align-items:center;justify-content:center;">
-    <div style="background:#fff;border-radius:14px;box-shadow:0 4px 24px #b3c6e633;padding:28px 22px 18px 22px;max-width:90vw;min-width:220px;max-width:320px;">
+  <!-- 상세 모달 (웹 접근성 강화) -->
+  <div id="detailModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle" style="display:none;position:fixed;left:0;top:0;width:100vw;height:100vh;z-index:999;background:rgba(0,0,0,0.18);align-items:center;justify-content:center;">
+    <div class="modal-content" style="background:#fff;border-radius:14px;box-shadow:0 4px 24px #b3c6e633;padding:28px 22px 18px 22px;max-width:90vw;min-width:220px;max-width:320px;">
+      <h2 id="modalTitle" class="visually-hidden">상세 정보</h2>
       <div id="modalContent" style="font-size:1.08rem;color:#222;margin-bottom:18px;word-break:keep-all;"></div>
-      <button onclick="closeModal()" style="width:100%;background:#e3f0ff;color:#3570b6;font-weight:700;border:none;border-radius:8px;padding:0.7em 0;font-size:1.01rem;cursor:pointer;">닫기</button>
+      <button id="modalCloseBtn" style="width:100%;background:#e3f0ff;color:#3570b6;font-weight:700;border:none;border-radius:8px;padding:0.7em 0;font-size:1.01rem;cursor:pointer;">닫기</button>
     </div>
   </div>
   <script>
-    // 배지 클릭시 상세 모달
-    const badgeDetails = {
-      'refrigerator-imminent': '임박: 곧 만료되는 물품이 있습니다. 빠른 처리가 필요합니다.',
-      'refrigerator-violation': '기준위반: 보관 기준을 위반한 물품이 있습니다.',
-      'library-imminent': '반납임박: 곧 반납해야 하는 도서가 있습니다.',
-      'library-overdue': '연체: 반납 기한이 지난 도서가 있습니다.',
-      'library-reserve': '예약대출이 가능한 도서입니다.'
-    };
-    document.querySelectorAll('.badge-detail').forEach(function(badge) {
-      badge.addEventListener('click', function(e) {
-        e.stopPropagation();
-        const type = badge.getAttribute('data-type');
-        document.getElementById('modalContent').innerText = badgeDetails[type] || type;
-        document.getElementById('detailModal').style.display = 'flex';
-      });
-    });
-    // 캐러셀 아이템 클릭 시 상세 모달
-    document.querySelectorAll('.vertical-carousel .carousel-item').forEach(function(item) {
-      item.addEventListener('click', function() {
-        let info = item.querySelector('.card-info')?.innerText || '';
-        let badges = Array.from(item.querySelectorAll('.card-badges .badge')).map(b=>b.innerText).join(' / ');
-        let content = info;
-        if(badges) content += '\n' + badges;
-        document.getElementById('modalContent').innerText = content;
-        document.getElementById('detailModal').style.display = 'flex';
-      });
-    });
-    function closeModal() {
-      document.getElementById('detailModal').style.display = 'none';
-    }
-    // 캐러셀 로직
-    function setupVerticalCarousel(carouselId) {
-      const carousel = document.getElementById(carouselId);
-      if (!carousel) return;
-      let startX = null;
-      let current = 0;
-      const items = carousel.querySelectorAll('.carousel-item');
-      const dotsContainer = carousel.closest('.main-card').querySelector('.carousel-dots');
-      const dots = [];
-
-      // dot 생성
-      if (dotsContainer) {
-          dotsContainer.innerHTML = '';
-          items.forEach((_, i) => {
-              const dot = document.createElement('span');
-              dot.className = 'dot' + (i === 0 ? ' active' : '');
-              dot.onclick = (e) => { 
-                e.stopPropagation(); // Prevent card click event
-                current = i; 
-                show(current); 
-              };
-              dotsContainer.appendChild(dot);
-              dots.push(dot);
-          });
-      }
-      
-      function show(idx) {
-        items.forEach((el, i) => el.classList.toggle('active', i === idx));
-        if (dotsContainer) {
-          dots.forEach((dot, i) => dot.classList.toggle('active', i === idx));
-        }
-
-        // 세탁기 캐러셀 아이콘, 타이틀 업데이트
-        if (carouselId === 'laundryCarousel') {
-          const selected = items[idx];
-          const type = selected.getAttribute('data-type');
-          const icon = selected.getAttribute('data-icon');
-          const iconClass = selected.getAttribute('data-icon-class');
-          const titleEl = document.getElementById('laundryCardTitle');
-          const iconContainerEl = document.getElementById('laundryCardIcon');
-          if(titleEl) titleEl.innerText = type;
-          if(iconContainerEl){
-            iconContainerEl.innerHTML = `<span class="material-symbols-outlined ${iconClass}">${icon}</span>`;
-          }
-        }
-      }
-      
-      carousel.addEventListener('touchstart', function(e) {
-        if (e.touches.length === 1) startX = e.touches[0].clientX;
-      }, { passive: true });
-      
-      carousel.addEventListener('touchend', function(e) {
-        if (startX === null) return;
-        const endX = e.changedTouches[0].clientX;
-        const diffX = endX - startX;
-        if (Math.abs(diffX) > 30) {
-          if (diffX < 0 && current < items.length - 1) current++;
-          else if (diffX > 0 && current > 0) current--;
-          show(current);
-        }
-        startX = null;
-      });
-      
-      carousel.addEventListener('wheel', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        if ((e.deltaX > 0 || e.deltaY > 0) && current < items.length - 1) current++;
-        else if ((e.deltaX < 0 || e.deltaY < 0) && current > 0) current--;
-        show(current);
-      });
-      
-      // 초기 상태 설정
-      show(current);
-    }
-
     document.addEventListener('DOMContentLoaded', function() {
-      setupVerticalCarousel('laundryCarousel');
-      setupVerticalCarousel('studyroomCarousel');
+        const modal = document.getElementById('detailModal');
+        const modalContent = document.getElementById('modalContent');
+        const closeModalBtn = document.getElementById('modalCloseBtn');
+        let lastFocusedElement;
+
+        const badgeDetails = {
+            'refrigerator-imminent': '임박: 곧 만료되는 물품이 있습니다. 빠른 처리가 필요합니다.',
+            'refrigerator-violation': '기준위반: 보관 기준을 위반한 물품이 있습니다.',
+            'library-imminent': '반납임박: 곧 반납해야 하는 도서가 있습니다.',
+            'library-overdue': '연체: 반납 기한이 지난 도서가 있습니다.',
+            'library-reserve': '예약대출이 가능한 도서입니다.'
+        };
+
+        function openModal(content) {
+            lastFocusedElement = document.activeElement;
+            modalContent.innerText = content;
+            modal.style.display = 'flex';
+            closeModalBtn.focus();
+            
+            modal.addEventListener('keydown', trapFocus);
+        }
+
+        function closeModal() {
+            modal.style.display = 'none';
+            if (lastFocusedElement) {
+                lastFocusedElement.focus();
+            }
+            modal.removeEventListener('keydown', trapFocus);
+        }
+
+        // Focus Trap
+        function trapFocus(e) {
+            if (e.key !== 'Tab' && e.key !== 'Escape') return;
+
+            if (e.key === 'Escape') {
+                closeModal();
+                return;
+            }
+
+            const focusableElements = modal.querySelectorAll('button');
+            const firstFocusableEl = focusableElements[0];
+            const lastFocusableEl = focusableElements[focusableElements.length - 1];
+
+            if (e.shiftKey) { // Shift + Tab
+                if (document.activeElement === firstFocusableEl) {
+                    lastFocusableEl.focus();
+                    e.preventDefault();
+                }
+            } else { // Tab
+                if (document.activeElement === lastFocusableEl) {
+                    firstFocusableEl.focus();
+                    e.preventDefault();
+                }
+            }
+        }
+
+        closeModalBtn.addEventListener('click', closeModal);
+
+        document.querySelectorAll('.badge-detail').forEach(function(badge) {
+            badge.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const type = badge.getAttribute('data-type');
+                const content = badgeDetails[type] || type;
+                openModal(content);
+            });
+        });
+
+        document.querySelectorAll('.vertical-carousel .carousel-item').forEach(function(item) {
+            item.addEventListener('click', function() {
+                let info = item.querySelector('.card-info')?.innerText || '';
+                let badges = Array.from(item.querySelectorAll('.badge')).map(b => b.innerText).join(' / ');
+                let content = info;
+                if (badges) content += '\n' + badges;
+                openModal(content);
+            });
+        });
+
+        // Carousel Logic
+        function setupVerticalCarousel(carouselId) {
+            const carousel = document.getElementById(carouselId);
+            if (!carousel) return;
+            let startX = null;
+            let current = 0;
+            const items = carousel.querySelectorAll('.carousel-item');
+            const dotsContainer = carousel.closest('.main-card').querySelector('.carousel-dots');
+            const dots = [];
+
+            if (dotsContainer) {
+                dotsContainer.innerHTML = '';
+                items.forEach((_, i) => {
+                    const dot = document.createElement('span');
+                    dot.className = 'dot' + (i === 0 ? ' active' : '');
+                    dot.onclick = (e) => {
+                        e.stopPropagation();
+                        current = i;
+                        show(current);
+                    };
+                    dotsContainer.appendChild(dot);
+                    dots.push(dot);
+                });
+            }
+
+            function show(idx) {
+                items.forEach((el, i) => el.classList.toggle('active', i === idx));
+                if (dotsContainer) {
+                    dots.forEach((dot, i) => dot.classList.toggle('active', i === idx));
+                }
+
+                if (carouselId === 'laundryCarousel') {
+                    const selected = items[idx];
+                    const type = selected.getAttribute('data-type');
+                    const icon = selected.getAttribute('data-icon');
+                    const iconClass = selected.getAttribute('data-icon-class'); // JS 개선
+                    const titleEl = document.getElementById('laundryCardTitle');
+                    const iconContainerEl = document.getElementById('laundryCardIcon');
+                    if (titleEl) titleEl.innerText = type;
+                    if (iconContainerEl) {
+                        iconContainerEl.innerHTML = `<span class="material-symbols-outlined ${iconClass}">${icon}</span>`;
+                    }
+                }
+            }
+
+            carousel.addEventListener('touchstart', (e) => {
+                if (e.touches.length === 1) startX = e.touches[0].clientX;
+            }, { passive: true });
+
+            carousel.addEventListener('touchend', (e) => {
+                if (startX === null) return;
+                const endX = e.changedTouches[0].clientX;
+                const diffX = endX - startX;
+                if (Math.abs(diffX) > 30) {
+                    if (diffX < 0 && current < items.length - 1) current++;
+                    else if (diffX > 0 && current > 0) current--;
+                    show(current);
+                }
+                startX = null;
+            });
+
+            carousel.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                if ((e.deltaX > 0 || e.deltaY > 0) && current < items.length - 1) current++;
+                else if ((e.deltaX < 0 || e.deltaY < 0) && current > 0) current--;
+                show(current);
+            });
+            show(current);
+        }
+
+        setupVerticalCarousel('laundryCarousel');
+        setupVerticalCarousel('studyroomCarousel');
+
+        // 세탁기/건조기 카드 업데이트 함수
+        function updateLaundryCard(deviceType, deviceInfo, status) {
+          const card = document.querySelector('.main-card.laundry');
+          const icon = card.querySelector('#laundryCardIcon .material-symbols-outlined');
+          const title = card.querySelector('#laundryCardTitle');
+          const info = card.querySelector('.card-info');
+          const badge = card.querySelector('.badge');
+
+          // 아이콘 업데이트
+          icon.className = `material-symbols-outlined icon-${deviceType === '세탁기' ? 'laundry' : 'dryer'}`;
+          icon.textContent = deviceType === '세탁기' ? 'local_laundry_service' : 'laundry';
+
+          // 제목 업데이트
+          title.textContent = deviceType;
+
+          // 정보 업데이트
+          info.textContent = deviceInfo;
+
+          // 상태 업데이트
+          badge.textContent = status;
+          badge.className = `badge ${getStatusClass(status)}`;
+        }
+
+        // 상태에 따른 배지 클래스 반환 함수
+        function getStatusClass(status) {
+          const statusMap = {
+            '기다리고 있어요': 'gray',
+            '곧 사용 가능': 'yellow',
+            '사용중': 'blue',
+            '점검중': 'red'
+          };
+          return statusMap[status] || 'gray';
+        }
+
+        // 사용 예시:
+        // updateLaundryCard('세탁기', '2번 사용중, 15분 남음', '기다리고 있어요');
+        // updateLaundryCard('건조기', '3번 대기중', '곧 사용 가능');
     });
   </script>
 </body>
